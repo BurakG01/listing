@@ -5,6 +5,7 @@ import com.listing.listingservice.domain.Listing;
 import com.listing.listingservice.repository.ListingRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -15,8 +16,14 @@ public class ListingService {
         this.listingRepository = listingRepository;
     }
 
-    public List<Listing> getListingsByIdList(List<String> ids) {
-        return listingRepository.getByIdList(ids);
+    public List<Listing> getListingsByIdList(String ids) {
+
+        if (ids == null || ids.isEmpty()) {
+            throw new IllegalArgumentException("Id list cannot be null or empty");
+        }
+        List<String> idList = Arrays.asList(ids.split(",").clone());
+
+        return listingRepository.getByIdList(idList);
     }
 
     public String create(CreateListingRequest createListingRequest) {
@@ -32,18 +39,12 @@ public class ListingService {
         listingRepository.insert(listing);
 
         return listing.getId();
-
     }
 
     public void decreaseStock(String id, int quantity) {
         Listing listing = listingRepository.findById(id);
-
-        if (listing.getStock() < quantity && quantity <= 0) {
-            // todo : exception
-        }
         listing.decreaseStock(quantity);
         listingRepository.update(listing);
-
     }
 
     private void ensureCreateListingRequestValid(CreateListingRequest createListingRequest) {

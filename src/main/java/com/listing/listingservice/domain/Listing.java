@@ -55,7 +55,11 @@ public class Listing {
     }
 
     public void decreaseStock(int quantity) {
-        int remainingStock = this.getStock() - quantity;
+
+        if (stock < quantity || quantity <= 0) {
+            throw new IllegalArgumentException("Quantity  cannot be greater then stock and quantity cannot be less then or equal to zero");
+        }
+        int remainingStock = stock - quantity;
         this.setStock(remainingStock);
     }
 }

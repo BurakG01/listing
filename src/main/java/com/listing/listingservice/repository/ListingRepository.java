@@ -32,7 +32,7 @@ public class ListingRepository {
         listingCollection.replace(listing.getId(), listing);
     }
 
-    public Listing findById(String id) {
+    public Listing findById(String id){
         try {
 
             GetResult getResult = listingCollection.get(id);
